@@ -4,7 +4,7 @@ Pydantic schemas for User data validation and serialization.
 
 from datetime import datetime
 import re
-from pydantic import BaseModel, EmailStr, Field, field_validator, ConfigDict
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 from app.models.user import UserRole
 
 
@@ -20,8 +20,10 @@ class UserRegisterRequest(BaseModel):
         description="Full name of the user",
         examples=["John Doe"]
     )
-    email: EmailStr = Field(
+    email: str = Field(
         ...,
+        min_length=5,
+        max_length=255,
         description="Valid email address (must be unique)",
         examples=["john.doe@example.com"]
     )
@@ -46,6 +48,14 @@ class UserRegisterRequest(BaseModel):
             raise ValueError("Full name must be at least 2 characters long")
         return trimmed
 
+    @field_validator("email")
+    @classmethod
+    def validate_email_format(cls, v: str) -> str:
+        trimmed = v.strip().lower()
+        if not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", trimmed):
+            raise ValueError("Please provide a valid email address")
+        return trimmed
+
     @field_validator("password")
     @classmethod
     def validate_password_strength(cls, v: str) -> str:
@@ -62,8 +72,10 @@ class UserLoginRequest(BaseModel):
     """
     Schema for User Login credentials.
     """
-    email: EmailStr = Field(
+    email: str = Field(
         ...,
+        min_length=5,
+        max_length=255,
         description="Registered email address",
         examples=["john.doe@example.com"]
     )
@@ -72,6 +84,14 @@ class UserLoginRequest(BaseModel):
         description="User password",
         examples=["SecurePass123!"]
     )
+
+    @field_validator("email")
+    @classmethod
+    def validate_email_format(cls, v: str) -> str:
+        trimmed = v.strip().lower()
+        if not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", trimmed):
+            raise ValueError("Please provide a valid email address")
+        return trimmed
 
 
 class UserResponse(BaseModel):
