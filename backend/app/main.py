@@ -27,25 +27,14 @@ logger = logging.getLogger("placement_portal")
 async def lifespan(app: FastAPI):
     """
     Lifespan context manager for startup and shutdown tasks.
-    Auto-creates database tables on startup in MySQL and applies missing column migrations.
     """
-    try:
-        Base.metadata.create_all(bind=engine)
-        logger.info("[SUCCESS] Database tables verified and created in MySQL.")
-
-        # Safe automatic column migrations for existing tables
-        from sqlalchemy import text
-        with engine.connect() as conn:
-            try:
-                conn.execute(text("ALTER TABLE applications ADD COLUMN offered_ctc_lpa FLOAT NULL;"))
-                conn.commit()
-            except Exception:
-                pass  # Column already exists
-    except Exception as e:
-        logger.warning(
-            f"[NOTICE] MySQL database not reachable on startup ({e}). "
-            "Please check MySQL service and credentials in backend/.env"
-        )
+    import os
+    if not os.getenv("VERCEL"):
+        try:
+            Base.metadata.create_all(bind=engine)
+            logger.info("[SUCCESS] Database tables verified in local MySQL.")
+        except Exception as e:
+            logger.warning(f"[NOTICE] Local database not reachable on startup: {e}")
     yield
 
 

@@ -13,4 +13,5 @@ for path in [backend_dir, root_dir, current_dir]:
 from app.main import app
 
 # Export for Vercel Python runtime
+app = app
 handler = app
