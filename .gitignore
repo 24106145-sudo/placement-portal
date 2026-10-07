@@ -1,0 +1,37 @@
+# Ignore large video files and binaries
+*.mp4
+*.exe
+*.zip
+*.tar.gz
+
+# Node & Frontend
+node_modules/
+dist/
+frontend/dist/
+frontend/node_modules/
+.npm/
+
+# Python & Backend
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+backend/venv/
+.venv/
+venv/
+ENV/
+*.pkl
+
+# Vercel & IDE
+.vercel
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Temporary & Scratch
+scratch/
+scratch_test.py
+*.log

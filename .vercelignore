@@ -1,0 +1,21 @@
+# Heavy videos & binaries
+PlacementProjectWorkingVideo1.mp4
+PlacementProjectWorkingVideo2.mp4
+cloudflared.exe
+
+# Local Python virtual environment
+backend/venv
+
+# Node modules
+frontend/node_modules
+
+# Native Android
+frontend/android
+
+# Database dumps
+PlacementPortal.sql
+database/PlacementPortal.sql
+
+# Scratches
+scratch
+.git

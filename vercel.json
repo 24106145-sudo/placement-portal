@@ -1,0 +1,28 @@
+{
+  "framework": "vite",
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist",
+  "functions": {
+    "api/index.py": {
+      "excludeFiles": "{backend/venv/**,frontend/node_modules/**,*.mp4,*.exe,*.sql,frontend/android/**,database/**,scratch/**}"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/docs",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/openapi.json",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
