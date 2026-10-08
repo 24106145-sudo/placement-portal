@@ -35,3 +35,6 @@ ENV/
 scratch/
 scratch_test.py
 *.log
+
+# Test cache
+.pytest_cache/
