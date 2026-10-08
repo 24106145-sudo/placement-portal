@@ -1,0 +1,10 @@
+.git
+.github
+.venv
+.vercel_python_packages
+frontend
+database
+tests
+*.sql
+__pycache__
+.pytest_cache

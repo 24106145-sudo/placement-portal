@@ -1,0 +1,77 @@
+name: Placement Portal CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Backend Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install Frontend Dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build Frontend
+        working-directory: frontend
+        run: npm run build
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt pytest httpx
+
+      - name: Run Tests
+        run: python -m pytest -v
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: docker build -t placement-portal-api .
+
+      - name: Run Docker Container
+        run: docker run -d --name placement-api -p 8000:8000 -e VERCEL=1 placement-portal-api
+
+      - name: Verify API Response
+        run: curl -f --retry 10 --retry-delay 2 --retry-all-errors --retry-connrefused http://localhost:8000/
+
+      - name: Verify Running Container
+        run: docker ps
+
+      - name: Stop Container
+        run: docker stop placement-api
+
+      - name: Remove Container
+        run: docker rm placement-api
