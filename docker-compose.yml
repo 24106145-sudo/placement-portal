@@ -1,0 +1,23 @@
+services:
+
+  backend:
+    build:
+      context: ./backend
+    container_name: placement-portal-backend
+    environment:
+      DB_HOST: gateway01.ap-southeast-1.prod.aws.tidbcloud.com
+      DB_PORT: 4000
+      DB_USER: 4GojFXSM6fvswza.root
+      DB_PASSWORD: O6MS6QHSoR1QoXGK
+      DB_NAME: test
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: placement-portal-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
