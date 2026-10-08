@@ -65,7 +65,7 @@ jobs:
         run: docker run -d --name placement-api -p 8000:8000 -e VERCEL=1 placement-portal-api
 
       - name: Verify API Response
-        run: curl -f --retry 10 --retry-delay 2 --retry-connrefused http://localhost:8000/
+        run: curl -f --retry 10 --retry-delay 2 --retry-all-errors --retry-connrefused http://localhost:8000/
 
       - name: Verify Running Container
         run: docker ps
